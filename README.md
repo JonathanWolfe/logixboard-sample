@@ -1,27 +1,19 @@
-*Psst — looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+# Logixboard Sample
 
----
-
-# svelte app
-
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
-
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
-
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
-```
-
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
-
+- Uses `lowdb` for the database standin so it's clientside only
+    - Data is stored in `localstorage`
+- if you haven't imported the sample data yet, it will load that for you
+    - the conditional check is more useful if I had implemented edit or delete
+- Styling is rough, but I'm not a designer. Uses `Bulma` as a framework just because.
+    - I created a symlink for the `bulma.min.css` file in the public folder so I wouldn't need a build step for it. If the git repo loses it you'll need to re-link it.
+- I hadn't written in Svelte before so `App.svelte` is a little spaghetti looking. Probably should have split stuff into more components.
 
 ## Get started
+*Note that you will need to have [Node.js](https://nodejs.org) installed.*
 
 Install the dependencies...
 
 ```bash
-cd svelte-app
 npm install
 ```
 
