@@ -2,11 +2,16 @@
 
 - Uses `lowdb` for the database standin so it's clientside only
     - Data is stored in `localstorage`
-- if you haven't imported the sample data yet, it will load that for you
+- If you haven't imported the sample data yet, it will load that for you
     - the conditional check is more useful if I had implemented edit or delete
 - Styling is rough, but I'm not a designer. Uses `Bulma` as a framework just because.
     - I created a symlink for the `bulma.min.css` file in the public folder so I wouldn't need a build step for it. If the git repo loses it you'll need to re-link it.
 - I hadn't written in Svelte before so `App.svelte` is a little spaghetti looking. Probably should have split stuff into more components.
+- Not fully offline capable since I didn't want to go through setting up a service worker and configuring `Workbox`
+    - Will still work as long as you don't reload the page XD
+- Entries are filterable by statuses and modes
+- Search text is matched against all column values
+    - Search for `"Stockholm"` will show entries with Stockholm as either the Origin or Destination
 
 ## Get started
 *Note that you will need to have [Node.js](https://nodejs.org) installed.*
@@ -72,3 +77,24 @@ Then, from within your project folder:
 npm run build
 surge public my-project.surge.sh
 ```
+
+## Prompt
+
+    For this challenge, we are asking you to create a simple web application that will let a freight forwarder see where shipments are in the world. You will start with a data file that lists each shipment and has the following data for each shipment:
+
+        - Shipment ID
+        - Client name
+        - Origin address
+        - Destination address
+        - Mode of transport
+        - ETD (estimated time of departure from the origin)
+        - ETA (estimated time of arrival)
+        - Status
+
+    You will have creative freedom on how you want to present the information and what framework you want to build this in but keep the following things in mind:
+
+        - There is tremendous value in seeing all the shipments in an aggregate view
+        - User experience and concise information presentation will be important in order to encourage adoption
+        - Even if the web app loses connectivity, it should still be able to function in some capacity
+
+    As a bonus, in addition to displaying the existing shipments, add support for the forwarder to insert more shipments into the list.
