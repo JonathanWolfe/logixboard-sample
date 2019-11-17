@@ -1,8 +1,8 @@
 <script>
   import { onMount } from "svelte";
 
-  import Pagination from "./Pagination.svelte";
-  import CreationModal from "./Creation-Modal.svelte";
+  import Pagination from "./components/Pagination.svelte";
+  import CreationModal from "./components//Creation-Modal.svelte";
 
   export let db;
 

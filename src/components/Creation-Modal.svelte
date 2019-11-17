@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
 
-  import Shipment from "./models/shipment";
+  import Shipment from "../models/shipment";
 
   const dispatch = createEventDispatcher();
 
