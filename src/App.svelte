@@ -9,6 +9,7 @@
   let creationModalActive = false;
 
   let shipments = [];
+  let filteredShipments = "";
   let total = 0;
 
   let headers = [
@@ -73,6 +74,52 @@
     modes = getAttrCounts(modes, "mode");
   }
 
+  function regularSearch(inputText, row) {
+    return Object.values(row).some(i =>
+      String(i)
+        .toLocaleLowerCase()
+        .includes()
+    );
+  }
+
+  function advancedSearch(inputText, row) {
+    const toFind = inputText.toLocaleLowerCase().trim();
+
+    const colonIndex = toFind.indexOf(":");
+
+    // Advanced Search
+    if (colonIndex > -1) {
+      const afterColon = toFind.substring(colonIndex + 1);
+
+      const inputColumn = String(toFind.substring(0, colonIndex))
+        .trim()
+        .toLocaleLowerCase();
+      const columns = Object.keys(row).map(i => i.toLocaleLowerCase());
+      const findColumnRegex = new RegExp(`\\b${inputColumn}\\b`);
+
+      let found = false;
+
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        const temp = findColumnRegex.exec(column);
+
+        if (temp != null) {
+          found = i;
+          break;
+        }
+      }
+
+      return typeof found === "number"
+        ? String(row[columns[found]])
+            .toLocaleLowerCase()
+            .trim()
+            .includes(afterColon)
+        : regularSearch(toFind, row);
+    }
+
+    return regularSearch(toFind, row);
+  }
+
   function filterItems() {
     const enabledStatues = statuses.filter(i => i.enabled).map(i => i.name);
     const enabledModes = modes.filter(i => i.enabled).map(i => i.name);
@@ -82,11 +129,7 @@
         enabledStatues.includes(item.status) &&
         enabledModes.includes(item.mode) &&
         (searchText && searchText.trim()
-          ? Object.values(item).some(i =>
-              String(i)
-                .toLocaleLowerCase()
-                .includes(searchText.toLocaleLowerCase().trim())
-            )
+          ? advancedSearch(searchText, item)
           : true)
     );
   }
@@ -98,7 +141,37 @@
     return filteredShipments.slice(start, end);
   }
 
-  $: filteredShipments = filterItems(shipments, statuses, modes, searchText);
+  function debounce(func, wait, immediate) {
+    let timeout;
+
+    return function() {
+      let context = this;
+      let args = arguments;
+
+      let later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+
+      let callNow = immediate && !timeout;
+
+      clearTimeout(timeout);
+
+      timeout = setTimeout(later, wait);
+
+      if (callNow) func.apply(context, args);
+    };
+  }
+
+  function filterShipments() {
+    filteredShipments = filterItems(shipments, statuses, modes, searchText);
+  }
+
+  const debouncedFilterShipments = debounce(filterShipments, 200);
+
+  $: {
+    debouncedFilterShipments(shipments, statuses, modes, searchText);
+  }
 
   $: visibleHeaders = headers.filter(i => !i.hidden);
   $: visibleItems = paginate(filteredShipments, currentPage, rowsPerPage);
